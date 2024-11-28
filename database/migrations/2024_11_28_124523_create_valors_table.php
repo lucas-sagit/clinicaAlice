@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('valors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_administrador')->constrained('administrador');
             $table->double('valorRecebido')->default(0);
             $table->timestamps();
         });

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('sessaos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_funcionarios')->constrained('funcionarios');
             $table->double('quantidadePaga');
             $table->double('quantidadeFalta');
             $table->timestamps();
