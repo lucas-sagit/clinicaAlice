@@ -1,0 +1,148 @@
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Cabeçalho */
+header {
+    background-color: #88b7af;
+    color: white;
+    padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+header img{
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+}
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Seções */
+section {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: justify;
+}
+
+section h2 {
+    color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+.team {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Gera colunas automaticamente */
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.team a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.team-member {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    display: grid;
+}
+
+.team-member img {
+    display: block;
+    margin: 0 auto; /* Centraliza horizontalmente */
+    border-radius: 50%; /* 50% deixa a imagem redonda */
+    width: 80px;
+    height: 80px;
+}
+
+/* Formulário de Contato */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input, form textarea {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+form button:hover {
+    background-color: #45a049;
+}
+
+/* Rodapé */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 1rem 0;
+    /* margin-top: 2rem; */
+    height: 100px;
+}
+
+footer a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+}
+
+footer p {
+    display: flex;
+    gap: 5px;
+}
