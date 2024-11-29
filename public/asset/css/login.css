@@ -1,0 +1,53 @@
+/* Estilo global para o body e para centralizar tudo na página */
+body, html {
+    height: 100%; /* Garante que a altura seja 100% */
+    margin: 0;
+    font-family: Arial, sans-serif; /* Definindo uma fonte padrão */
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Altura da tela inteira */
+    background-color: #f4f4f4; /* Cor de fundo suave */
+}
+
+.login__Titulo {
+    text-align: center; /* Alinha o título ao centro */
+    margin-bottom: 20px; /* Espaço entre o título e o formulário */
+}
+
+.login__Titulo h1 {
+    font-size: 2em;
+    color: #333;
+}
+
+form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona sombra suave */
+    width: 300px; /* Largura fixa para o formulário */
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0; /* Espaçamento entre os campos */
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Bordas arredondadas */
+    box-sizing: border-box; /* Inclui o padding no tamanho total do campo */
+}
+
+form input[type="submit"] {
+    background-color: #4CAF50; /* Cor do botão */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover {
+    background-color: #45a049; /* Muda a cor ao passar o mouse */
+}
