@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class sessao extends Model
 {
@@ -10,6 +11,12 @@ class sessao extends Model
 
     protected $fillable = [
         'quantidadePaga',
-        'quantidadeFalta'
+        'quantidadeFalta',
+        'id_cliente'
     ];
+
+    public function clientes(): HasMany {
+
+        return $this->hasMany(Cliente::class);
+    }
 }

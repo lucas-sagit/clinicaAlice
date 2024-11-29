@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('funcionarios', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
             $table->foreignId('id_administrador')->constrained('administrador');
             $table->string('nome');
             $table->string('cpf');
             $table->date('dataNascimento');
+            $table->string('senha');
             $table->timestamps();
         });
     }

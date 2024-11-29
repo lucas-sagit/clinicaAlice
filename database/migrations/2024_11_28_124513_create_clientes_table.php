@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('clientes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('id_funcionarios')->constrained('funcionarios');
+            $table->id()->primary();
+            // $table->foreignId('id_funcionarios')->constrained('funcionarios');
+            // $table->foreignId('id_administrador')->constrained('administrador');
+            $table->foreignId('id_funcionario')->constrained()->onDelete('cascade');
+            $table->foreignId('id_administrador')->constrained()->onDelete('cascade');
+            $table->foreignId('id_sessao')->constrained()->onDelete('cascade');
             $table->string('nome');
             $table->string('cpf');
             $table->date('dataNascimento');

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('valors', function (Blueprint $table) {
-            $table->id();
+            $table->id()->primary();
             $table->foreignId('id_administrador')->constrained('administrador');
             $table->double('valorRecebido')->default(0);
             $table->timestamps();
