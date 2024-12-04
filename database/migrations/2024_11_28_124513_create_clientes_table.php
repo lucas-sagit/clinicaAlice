@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id()->primary();
-            // $table->foreignId('id_funcionarios')->constrained('funcionarios');
-            // $table->foreignId('id_administrador')->constrained('administrador');
             $table->foreignId('id_funcionario')->constrained()->onDelete('cascade');
             $table->foreignId('id_administrador')->constrained()->onDelete('cascade');
             $table->foreignId('id_sessao')->constrained()->onDelete('cascade');

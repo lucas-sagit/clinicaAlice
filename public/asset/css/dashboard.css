@@ -1,90 +1,89 @@
-/* styles.css */
-:root {
-    --primary-color: #007bff;
-    --secondary-color: #4e73df;
-    --light-color: #f4f4f9;
-    --card-background: #fff;
-    --card-shadow: rgba(0, 0, 0, 0.1);
-    --heading-color: #333;
-    --card-border-radius: 8px;
-    --card-padding: 20px;
-  }
-
-  body {
-    font-family: Arial, sans-serif;
+/* Reset de estilos */
+* {
     margin: 0;
     padding: 0;
-    background-color: var(--light-color);
+    box-sizing: border-box;
   }
 
-  .dashboard {
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1200px;
+  /* Estilo geral do dashboard */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e2dfdf;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
     padding: 20px;
   }
 
-  header {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    color: var(--heading-color);
-  }
-
-  .stats {
+  /* Container principal do dashboard */
+  .dashboard {
+    width: 100%;
+    max-width: 1200px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
+    flex-direction: column;
   }
 
-  .card {
-    background-color: var(--card-background);
-    border-radius: var(--card-border-radius);
-    box-shadow: 0 2px 10px var(--card-shadow);
-    padding: var(--card-padding);
+  /* Estilos do cabeçalho */
+  header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
     text-align: center;
-    width: 30%;
   }
 
-  .card h2 {
-    font-size: 1.5rem;
-    color: #555;
-  }
-
-  .card p {
+  header h1 {
     font-size: 2rem;
     font-weight: bold;
-    color: var(--primary-color);
   }
 
-  .charts {
+  /* Corpo do dashboard */
+  .body {
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    padding: 20px;
   }
 
-  canvas {
-    width: 48%;
-    height: 300px;
+  /* Estilo para os atributos no lado esquerdo */
+  .body__Atributos {
+    width: 250px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
+  .body__Atributos ol {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  .body__Atributos li {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+  }
+
+  .body__Atributos li:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  /* Responsividade */
   @media (max-width: 768px) {
-    .stats {
+    .body {
       flex-direction: column;
     }
 
-    .card {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .charts {
-      flex-direction: column;
-    }
-
-    canvas {
+    .body__Atributos {
       width: 100%;
       margin-bottom: 20px;
     }

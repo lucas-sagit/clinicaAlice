@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('funcionarios', function (Blueprint $table) {
             $table->id()->primary();
-            $table->foreignId('id_administrador')->constrained('administrador');
+            $table->foreignId('id_administrador')->constrained();
             $table->string('nome');
             $table->string('cpf');
             $table->date('dataNascimento');
