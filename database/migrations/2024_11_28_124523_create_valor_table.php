@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('valors', function (Blueprint $table) {
+        Schema::create('valor', function (Blueprint $table) {
             $table->id()->primary();
             $table->foreignId('id_administrador')->constrained('administrador');
             $table->double('valorRecebido')->default(0);
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('valors');
+        Schema::dropIfExists('valor');
     }
 };

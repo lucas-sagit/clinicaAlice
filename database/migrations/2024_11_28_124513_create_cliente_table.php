@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('administradors', function (Blueprint $table) {
+        Schema::create('cliente', function (Blueprint $table) {
             $table->id()->primary();
+            $table->foreignId('id_funcionario')->constrained()->onDelete('cascade');
+            $table->foreignId('id_administrador')->constrained()->onDelete('cascade');
+            $table->foreignId('id_sessao')->constrained()->onDelete('cascade');
             $table->string('nome');
             $table->string('cpf');
             $table->date('dataNascimento');
-            $table->string('senha');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('administradors');
+        Schema::dropIfExists('cliente');
     }
 };
