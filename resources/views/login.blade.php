@@ -15,9 +15,9 @@
         <div class="login__Titulo">
             <h1>Faça login</h1>
         </div>
-        <form action="{{ route('login.store') }}" method="POST">
+        <form action="{{ route('login') }}" method="POST">
             @csrf
-            <input type="text" name="cpf" id="cpf" placeholder="Insira seu cpf">
+            <input type="text" name="cpf" id="cpf" value="{{old("cpf")}}" placeholder="Insira seu cpf">
             <input type="password" name="senha" id="senha" placeholder="Insira sua senha">
             <input type="submit" value="Login">
         </form>

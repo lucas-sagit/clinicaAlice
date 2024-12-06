@@ -1,21 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController; // Use o LoginController corretamente
-use App\Http\Controllers\LoginController as ControllersLoginController;
+use App\Http\Controllers\LoginController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Página de dashboard protegida por autenticação
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
+})->name("dashboard");
 
-// Definir corretamente o controller para as rotas de login
+// Rotas para login e logout
 Route::controller(LoginController::class)->group(function() {
-    Route::get('login', 'showLoginForm')->name('login.index');
-    Route::post('login', 'authenticate')->name('login.store');
-    Route::get('logout', 'destroy')->name('login.destroy');
+    Route::get('login', 'showLoginForm')->name('login');  // Define a rota 'login'
+    Route::post('login', 'authenticate');
+    Route::get('logout', 'destroy')->name('logout');
 });
 
