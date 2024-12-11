@@ -12,6 +12,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Adicionando jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 </head>
 
 <body>
@@ -34,7 +37,7 @@
                         <td>{{ $cliente->id }}</td>
                         <td>{{ $cliente->nome }}</td>
                         <td>{{ $cliente->cpf }}</td>
-                        <td>{{ $cliente->dataNascimento }}</td>
+                        <td>{{ \Carbon\Carbon::parse($cliente->dataNascimento)->format('d/m/Y') }}</td>
                         <td>
                             <button class="btn btn-warning btn-sm"
                                 onclick="editClient({{ $cliente->id }})">Editar</button>
@@ -44,7 +47,6 @@
                     </tr>
                 @endforeach
             </tbody>
-
         </table>
     </div>
 
@@ -114,6 +116,11 @@
     </div>
 
     <script>
+        $(document).ready(function(){
+            $('#cpf').mask('000.000.000-00');
+            $('#editCpf').mask('000.000.000-00');
+        });
+
         $('#addClienteForm').submit(function(event) {
             event.preventDefault();
 
@@ -131,22 +138,21 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    alert(response.message); // Alerta com a mensagem de sucesso
-                    $('#addModal').modal('hide'); // Fecha o modal
-
-                    // Adiciona a linha na tabela com os dados do cliente
+                    alert(response.message);
+                    location.reload();
+                    $('#addModal').modal('hide');
                     $('#clienteTable').append(`
-                <tr>
-                    <td>${response.cliente.id}</td>
-                    <td>${response.cliente.nome}</td>
-                    <td>${response.cliente.cpf}</td>
-                    <td>${response.cliente.dataNascimento}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="editClient(${response.cliente.id})">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteClient(${response.cliente.id})">Deletar</button>
-                    </td>
-                </tr>
-            `);
+                        <tr>
+                            <td>${response.cliente.id}</td>
+                            <td>${response.cliente.nome}</td>
+                            <td>${response.cliente.cpf}</td>
+                            <td>${response.cliente.dataNascimento}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editClient(${response.cliente.id})">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteClient(${response.cliente.id})">Deletar</button>
+                            </td>
+                        </tr>
+                    `);
                 },
                 error: function(xhr, status, error) {
                     alert("Erro ao adicionar cliente");
@@ -154,6 +160,22 @@
             });
         });
 
+        function editClient(id) {
+            $.ajax({
+                url: `/cliente/${id}/edit`,
+                type: 'PUT',
+                success: function(response) {
+                    $('#editNome').val(response.cliente.nome);
+                    $('#editCpf').val(response.cliente.cpf);
+                    $('#editDataNascimento').val(response.cliente.dataNascimento);
+                    $('#editClientId').val(response.cliente.id);
+                    $('#editModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    alert("Erro ao carregar os dados do cliente");
+                }
+            });
+        }
 
         function deleteClient(id) {
             if (confirm("Tem certeza que deseja excluir este cliente?")) {
@@ -165,8 +187,8 @@
                     },
                     success: function(response) {
                         alert(response.message);
-                        // Remove a linha do cliente da tabela
                         $(`#clienteTable tr[data-id="${id}"]`).remove();
+                        location.reload();
                     },
                     error: function(xhr, status, error) {
                         alert("Erro ao deletar cliente");

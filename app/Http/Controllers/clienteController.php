@@ -10,27 +10,27 @@ use App\Models\Sessao;
 
 class ClienteController extends Controller
 {
-    // Método para mostrar o formulário de criação de cliente
+
     public function showClienteForm()
     {
         $clientes = Cliente::all();
-        return view('components.cliente', compact('clientes')); // Retorna a view com o formulário, se necessário
+        return view('components.cliente', compact('clientes'));
     }
 
-    // Método para criar um novo cliente
+
     public function create(Request $request)
     {
-        // Validação dos dados recebidos
+
         $request->validate([
             'nome' => 'required|string|max:255',
-            'cpf' => 'required|string|cpf', // Adicionar validação de CPF
+            'cpf' => 'required|string|cpf',
             'dataNascimento' => 'required|date',
             'id_funcionario' => 'nullable|exists:funcionarios,id',
             'id_administrador' => 'nullable|exists:administradores,id',
             'id_sessao' => 'nullable|exists:sessoes,id',
         ]);
 
-        // Criação de um novo cliente
+
         Cliente::create([
             'nome' => $request->nome,
             'cpf' => $request->cpf,
@@ -40,18 +40,25 @@ class ClienteController extends Controller
             'id_sessao' => $request->id_sessao,
         ]);
 
-        return response()->json(['message' => 'Cliente criado com sucesso!'], 201);
+        return response()->json(['message' => 'Cliente criado com sucesso!'], 200);
     }
 
     public function edit($id)
     {
         $cliente = Cliente::findOrFail($id);
-        return response()->json($cliente);
+        return response()->json([
+            'cliente' => [
+            'id' => $cliente->id,
+            'nome' => $cliente->nome,
+            'cpf' => $cliente->cpf,
+            'dataNascimento' => $cliente->dataNascimento->format('Y-m-d')
+            ]
+        ]);
     }
+
 
     public function store(Request $request)
     {
-
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|max:14',
@@ -72,29 +79,17 @@ class ClienteController extends Controller
 
     public function update(Request $request, $id)
     {
-
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'cpf' => 'required|string|cpf',
-            'dataNascimento' => 'required|date',
-            'id_funcionario' => 'nullable|exists:funcionarios,id',
-            'id_administrador' => 'nullable|exists:administradores,id',
-            'id_sessao' => 'nullable|exists:sessoes,id',
-        ]);
-
-        // Encontra o cliente e atualiza os dados
         $cliente = Cliente::findOrFail($id);
-        $cliente->update([
-            'nome' => $request->nome,
-            'cpf' => $request->cpf,
-            'dataNascimento' => $request->dataNascimento,
-            'id_funcionario' => $request->id_funcionario,
-            'id_administrador' => $request->id_administrador,
-            'id_sessao' => $request->id_sessao,
-        ]);
+        $cliente->nome = $request->nome;
+        $cliente->cpf = $request->cpf;
+        $cliente->dataNascimento = $request->dataNascimento;
+        $cliente->save();
 
-        return response()->json(['message' => 'Cliente atualizado com sucesso!'], 200);
+        return response()->json([
+            'cliente' => $cliente
+        ]);
     }
+
 
     public function destroy($id)
     {
@@ -104,7 +99,7 @@ class ClienteController extends Controller
 
         return response()->json([
             'message' => 'Cliente deletado com sucesso!',
-            'delete' => $cliente
+            'cliente' => $cliente
         ]);
     }
 }
