@@ -15,7 +15,8 @@ class cliente extends Model
         'cpf',
         'dataNascimento',
         'id_funcionario',
-        'id_administrador'
+        'id_administrador',
+        'id_sessao',
     ];
 
     public function funcionario(): BelongsTo {
