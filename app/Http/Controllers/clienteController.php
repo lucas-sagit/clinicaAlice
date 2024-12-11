@@ -24,6 +24,7 @@ class ClienteController extends Controller
         $request->validate([
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|cpf',
+            'telefone' => 'required|string|telefone',
             'dataNascimento' => 'required|date',
             'id_funcionario' => 'nullable|exists:funcionarios,id',
             'id_administrador' => 'nullable|exists:administradores,id',
@@ -34,6 +35,7 @@ class ClienteController extends Controller
         Cliente::create([
             'nome' => $request->nome,
             'cpf' => $request->cpf,
+            'telefone' => $request->telefone,
             'dataNascimento' => $request->dataNascimento,
             'id_funcionario' => $request->id_funcionario,
             'id_administrador' => $request->id_administrador,
@@ -51,6 +53,7 @@ class ClienteController extends Controller
             'id' => $cliente->id,
             'nome' => $cliente->nome,
             'cpf' => $cliente->cpf,
+            'telefone' => $cliente->telefone,
             'dataNascimento' => $cliente->dataNascimento->format('Y-m-d')
             ]
         ]);
@@ -62,12 +65,14 @@ class ClienteController extends Controller
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|max:14',
+            'telefone' => 'required|string|max:14',
             'dataNascimento' => 'required|date',
         ]);
 
         $cliente = new Cliente();
         $cliente->nome = $validated['nome'];
         $cliente->cpf = $validated['cpf'];
+        $cliente->telefone = $validated['telefone'];
         $cliente->data_nascimento = $validated['dataNascimento'];
         $cliente->save();
 
@@ -81,6 +86,7 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
         $cliente->nome = $request->nome;
+        $cliente->telefone = $request->telefone;
         $cliente->cpf = $request->cpf;
         $cliente->dataNascimento = $request->dataNascimento;
         $cliente->save();

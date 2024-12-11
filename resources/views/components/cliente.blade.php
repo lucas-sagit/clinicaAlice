@@ -72,6 +72,10 @@
                             <input type="text" class="form-control" id="cpf" required>
                         </div>
                         <div class="form-group">
+                            <label for="editTelef">Telefone</label>
+                            <input type="text" class="form-control" id="editTelef" required>
+                        </div>
+                        <div class="form-group">
                             <label for="dataNascimento">Data de Nascimento</label>
                             <input type="date" class="form-control" id="dataNascimento" required>
                         </div>
@@ -104,6 +108,10 @@
                             <input type="text" class="form-control" id="editCpf" required>
                         </div>
                         <div class="form-group">
+                            <label for="editTelef">Telefone</label>
+                            <input type="text" class="form-control" id="editTelef" required>
+                        </div>
+                        <div class="form-group">
                             <label for="editDataNascimento">Data de Nascimento</label>
                             <input type="date" class="form-control" id="editDataNascimento" required>
                         </div>
@@ -125,6 +133,7 @@
             event.preventDefault();
 
             const nome = $('#nome').val();
+            const telefone = $('#telefone').val();
             const cpf = $('#cpf').val();
             const dataNascimento = $('#dataNascimento').val();
 
@@ -134,6 +143,7 @@
                 data: {
                     nome: nome,
                     cpf: cpf,
+                    telefone: telefone,
                     dataNascimento: dataNascimento,
                     _token: '{{ csrf_token() }}'
                 },
@@ -146,6 +156,7 @@
                             <td>${response.cliente.id}</td>
                             <td>${response.cliente.nome}</td>
                             <td>${response.cliente.cpf}</td>
+                            <td>${response.cliente.telefone}</td>
                             <td>${response.cliente.dataNascimento}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm" onclick="editClient(${response.cliente.id})">Editar</button>
@@ -167,6 +178,7 @@
                 success: function(response) {
                     $('#editNome').val(response.cliente.nome);
                     $('#editCpf').val(response.cliente.cpf);
+                    $('#editTelef').val(response.cliente.telefone);
                     $('#editDataNascimento').val(response.cliente.dataNascimento);
                     $('#editClientId').val(response.cliente.id);
                     $('#editModal').modal('show');
