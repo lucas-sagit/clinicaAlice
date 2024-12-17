@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('cpf')->unique();
+            $table->string('telefone');
             $table->date('data_nascimento');
             $table->unsignedBigInteger('id_funcionario')->nullable();
             $table->unsignedBigInteger('id_administrador')->nullable();

@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\Funcionario;
 use App\Models\Administrador;
 use App\Models\Sessao;
+use Carbon\Carbon;
 
 class ClienteController extends Controller
 {
@@ -47,54 +48,47 @@ class ClienteController extends Controller
 
     public function edit($id)
     {
-        $cliente = Cliente::findOrFail($id);
+        $cliente = Cliente::find($id);
         return response()->json([
-            'cliente' => [
-            'id' => $cliente->id,
-            'nome' => $cliente->nome,
-            'cpf' => $cliente->cpf,
-            'telefone' => $cliente->telefone,
-            'dataNascimento' => $cliente->dataNascimento->format('Y-m-d')
-            ]
-        ]);
-    }
-
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'cpf' => 'required|string|max:14',
-            'telefone' => 'required|string|max:14',
-            'dataNascimento' => 'required|date',
-        ]);
-
-        $cliente = new Cliente();
-        $cliente->nome = $validated['nome'];
-        $cliente->cpf = $validated['cpf'];
-        $cliente->telefone = $validated['telefone'];
-        $cliente->data_nascimento = $validated['dataNascimento'];
-        $cliente->save();
-
-        return response()->json([
-            'message' => 'Cliente adicionado com sucesso',
             'cliente' => $cliente
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
-        $cliente = Cliente::findOrFail($id);
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'cpf' => 'required|string|cpf',
+            'telefone' => 'required|string',
+            'dataNascimento' => 'nullable|date',
+        ]);
+
+        $cliente = new Cliente();
         $cliente->nome = $request->nome;
-        $cliente->telefone = $request->telefone;
         $cliente->cpf = $request->cpf;
+        $cliente->telefone = $request->telefone;
         $cliente->dataNascimento = $request->dataNascimento;
         $cliente->save();
 
         return response()->json([
-            'cliente' => $cliente
+            'message' => 'Cliente cadastrado com sucesso!',
+            'cliente' => $cliente,
         ]);
     }
+
+
+    public function update(Request $request, $id)
+    {
+        $cliente = Cliente::find($id);
+        $cliente->nome = $request->input('nome');
+        $cliente->cpf = $request->input('cpf');
+        $cliente->telefone = $request->input('telefone');
+        $cliente->dataNascimento = Carbon::parse($request->input('editDdataNascimento'))->format('Y-m-d');  // Formatação
+        $cliente->save();
+
+        return response()->json(['message' => 'Cliente Atualizado com Sucesso!', 'cliente' => $cliente]);
+    }
+
 
 
     public function destroy($id)

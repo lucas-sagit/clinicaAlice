@@ -27,6 +27,7 @@
                     <th>#</th>
                     <th>Nome</th>
                     <th>CPF</th>
+                    <th>Telefone</th>
                     <th>Data de Nascimento</th>
                     <th>Ações</th>
                 </tr>
@@ -37,7 +38,9 @@
                         <td>{{ $cliente->id }}</td>
                         <td>{{ $cliente->nome }}</td>
                         <td>{{ $cliente->cpf }}</td>
-                        <td>{{ \Carbon\Carbon::parse($cliente->dataNascimento)->format('d/m/Y') }}</td>
+                        <td>{{ $cliente->telefone }}</td>
+                        <td>{{ $cliente->dataNascimento ? \Carbon\Carbon::parse($cliente->dataNascimento)->format('d/m/Y') : 'Data não informada' }}
+                        </td>
                         <td>
                             <button class="btn btn-warning btn-sm"
                                 onclick="editClient({{ $cliente->id }})">Editar</button>
@@ -50,7 +53,7 @@
         </table>
     </div>
 
-    <!-- Modal de Adicionar clientes -->
+
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -72,8 +75,8 @@
                             <input type="text" class="form-control" id="cpf" required>
                         </div>
                         <div class="form-group">
-                            <label for="editTelef">Telefone</label>
-                            <input type="text" class="form-control" id="editTelef" required>
+                            <label for="telef">Telefone</label>
+                            <input type="text" class="form-control" id="telef" required>
                         </div>
                         <div class="form-group">
                             <label for="dataNascimento">Data de Nascimento</label>
@@ -124,17 +127,20 @@
     </div>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('#cpf').mask('000.000.000-00');
             $('#editCpf').mask('000.000.000-00');
+            $('#telef').mask('(00) 00000-0000');
+            $('#editTelef').mask('(00) 00000-0000');
+
         });
 
         $('#addClienteForm').submit(function(event) {
             event.preventDefault();
 
             const nome = $('#nome').val();
-            const telefone = $('#telefone').val();
             const cpf = $('#cpf').val();
+            const telefone = $('#telef').val();
             const dataNascimento = $('#dataNascimento').val();
 
             $.ajax({
@@ -145,7 +151,7 @@
                     cpf: cpf,
                     telefone: telefone,
                     dataNascimento: dataNascimento,
-                    _token: '{{ csrf_token() }}'
+                    _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
                     alert(response.message);
@@ -166,7 +172,14 @@
                     `);
                 },
                 error: function(xhr, status, error) {
-                    alert("Erro ao adicionar cliente");
+                    if (xhr.responseJSON) {
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessages = Object.values(errors).map(err => err.join('\n')).join('\n');
+                        alert("Erro ao cadastrar cliente:\n" + errorMessages);
+                    } else {
+                        alert("Erro desconhecido: " + error);
+                    }
+                    console.error(xhr.responseText || error);
                 }
             });
         });
@@ -203,7 +216,14 @@
                         location.reload();
                     },
                     error: function(xhr, status, error) {
-                        alert("Erro ao deletar cliente");
+                        if (xhr.responseJSON) {
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = Object.values(errors).map(err => err.join('\n')).join('\n');
+                            alert("Erro ao cadastrar cliente:\n" + errorMessages);
+                        } else {
+                            alert("Erro desconhecido: " + error);
+                        }
+                        console.error(xhr.responseText || error);
                     }
                 });
             }

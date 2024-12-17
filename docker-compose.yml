@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Servidor PHP com Apache
+  app:
+    image: php:8.2-apache
+    container_name: app
+    volumes:
+      - .:/var/www/html
+      - ./php.ini:/usr/local/etc/php/conf.d/custom.ini
+    ports:
+      - "8080:80"
+    networks:
+      - laravel_network
+    environment:
+      - VIRTUAL_HOST=localhost
+
+  # Banco de dados MySQL
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: teste
+      MYSQL_DATABASE: clinicacasulo
+    #   MYSQL_USER: root
+      MYSQL_PASSWORD: teste
+    ports:
+      - "3306:3306"
+    networks:
+      - laravel_network
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  laravel_network:
+    driver: bridge
