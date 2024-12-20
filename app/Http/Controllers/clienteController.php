@@ -60,14 +60,14 @@ class ClienteController extends Controller
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|cpf',
             'telefone' => 'required|string',
-            'dataNascimento' => 'nullable|date',
+            'dataNascimento' => 'required|date_format:Y-m-d',
         ]);
 
         $cliente = new Cliente();
         $cliente->nome = $request->nome;
         $cliente->cpf = $request->cpf;
         $cliente->telefone = $request->telefone;
-        $cliente->dataNascimento = $request->dataNascimento;
+        $cliente->data_nascimento = $request->dataNascimento;
         $cliente->save();
 
         return response()->json([
@@ -79,17 +79,22 @@ class ClienteController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $cliente = Cliente::find($id);
+
+        if(!$cliente) {
+            return response()->json(['error' => 'Cliente não encontrado'], 404);
+        }
+
         $cliente->nome = $request->input('nome');
         $cliente->cpf = $request->input('cpf');
         $cliente->telefone = $request->input('telefone');
-        $cliente->dataNascimento = Carbon::parse($request->input('editDdataNascimento'))->format('Y-m-d');  // Formatação
+
+        $cliente->data_nascimento = Carbon::parse($request->input('dataNascimento'))->format('Y-m-d');  // Formatação
         $cliente->save();
 
         return response()->json(['message' => 'Cliente Atualizado com Sucesso!', 'cliente' => $cliente]);
     }
-
-
 
     public function destroy($id)
     {

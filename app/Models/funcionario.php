@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class funcionario extends Model
 {
-    protected $table = 'funcionarios';
+    protected $table = 'funcionario';
 
     protected $fillable = [
         'nome',
         'cpf',
+        'telefone',
         'dataNacimento',
         'senha'
     ];
@@ -23,7 +24,7 @@ class funcionario extends Model
     }
 
     public function clientes(): HasMany {
-        
+
         return $this->hasMany(Cliente::class);
     }
 }

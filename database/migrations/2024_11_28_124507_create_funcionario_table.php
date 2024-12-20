@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id()->primary();
             $table->foreignId('id_administrador')->constrained('administrador');
             $table->string('nome');
+            $table->string('telefone');
             $table->string('cpf');
             $table->date('dataNascimento');
             $table->string('senha');
