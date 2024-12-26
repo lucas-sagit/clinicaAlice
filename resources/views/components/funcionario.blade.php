@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html> --}}
 <html lang="en">
 
 <head>
@@ -31,27 +31,27 @@
                     <th>Nome</th>
                     <th>CPF</th>
                     <th>Telefone</th>
+                    <th>Cargo</th>
                     <th>Data de Nascimento</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody id="funcionarioTable">
                 @foreach ($funcionarios as $funcionario)
-                    tr data-id="{{ $funcionario->id }}">
                     <td>{{ $funcionario->id }}</td>
                     <td>{{ $funcionario->nome }}</td>
                     <td>{{ $funcionario->cpf }}</td>
                     <td>{{ $funcionario->telefone }}</td>
+                    <td>{{ $funcionario->cargo }}</td>
                     <td>{{ $funcionario->dataNascimento ? \Carbon\Carbon::parse($funcionario->dataNascimento)->format('d/m/Y') : 'Data não informada' }}
                     </td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editFuncionario({{ $funcionario }})">Editar</button>
+                        <button class="btn btn-warning btn-sm" onclick="editFuncionarioForm({{ $funcionario }})">Editar</button>
                         <button class="btn btn-danger btn-sm"
                             onclick="deleteFuncionario({{ $funcionario->id }})">Deletar</button>
                     </td>
                     </tr>
                 @endforeach
-
             </tbody>
         </table>
     </div>
@@ -79,8 +79,12 @@
                             <input type="text" class="form-control" id="cpf" required>
                         </div>
                         <div class="form-group">
-                            <label for="cpf">Telefone</label>
+                            <label for="telef">Telefone</label>
                             <input type="text" class="form-control" id="telef" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cargo">Cargo</label>
+                            <input type="text" class="form-control" id="cargo" required>
                         </div>
                         <div class="form-group">
                             <label for="dataNascimento">Data de Nascimento</label>
@@ -117,8 +121,12 @@
                             <input type="text" class="form-control" id="editCpf" required>
                         </div>
                         <div class="form-group">
-                            <label for="editCpf">CPF</label>
+                            <label for="editTelef">Telefone</label>
                             <input type="text" class="form-control" id="editTelef" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCargo">Cargo</label>
+                            <input type="text" class="form-control" id="editCargo" required>
                         </div>
                         <div class="form-group">
                             <label for="editDataNascimento">Data de Nascimento</label>
@@ -169,7 +177,10 @@
             const nome = document.getElementById('nome').value;
             const cpf = document.getElementById('cpf').value;
             const telefone = document.getElementById('telef').value;
+            const cargo = document.getElementById('cargo').value;
             const dataNascimento = document.getElementById('dataNascimento').value;
+
+            console.log(addFuncionarioForm);
 
             fetch('/funcionario', {
                     method: 'POST',
@@ -181,6 +192,7 @@
                         nome,
                         cpf,
                         telefone,
+                        cargo,
                         dataNascimento
                     })
                 })
@@ -194,12 +206,12 @@
                 });
         });
 
-        // Editar Cliente
-        function editFuncionario(funcionario) {
+        function editFuncionarioForm(funcionario) {
 
             document.getElementById('editNome').value = funcionario.nome;
             document.getElementById('editCpf').value = funcionario.cpf;
             document.getElementById('editTelef').value = funcionario.telefone;
+            document.getElementById('editCargo').value = funcionario.cargo;
             document.getElementById('editDataNascimento').value = funcionario.dataNascimento;
             document.getElementById('editFuncionarioId').value = funcionario.id;
             $('#editModal').modal('show');
@@ -208,11 +220,11 @@
 
         document.getElementById('editFuncionarioForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            console.log(event)
 
             const nome = document.getElementById('editNome').value;
             const cpf = document.getElementById('editCpf').value;
             const telefone = document.getElementById('editTelef').value;
+            const cargo = document.getElementById('editCargo').value;
             const dataNascimento = document.getElementById('editDataNascimento').value;
             const id = document.getElementById('editFuncionarioId').value;
 
@@ -227,8 +239,10 @@
                         nome,
                         cpf,
                         telefone,
-                        dataNascimento: dataNascimento
+                        cargo,
+                        dataNascimento,
                     })
+
                 })
 
                 .then(response => response.json())
@@ -236,12 +250,10 @@
                     location.reload();
                 })
                 .catch(error => {
-                    alert("Erro ao carregar os dados do cliente");
+                    alert("Erro ao alterar os dados do funcionário");
                 });
         })
 
-
-        // Deletar funcionario
         function deleteFuncionario(id) {
             if (confirm("Tem certeza que deseja excluir este funcionário?")) {
                 fetch(`/funcionario/${id}`, {
@@ -254,6 +266,7 @@
                     .then(response => response.json())
                     .then(data => {
                         alert(data.message);
+                        location.reload();
                         document.querySelector(`#funcionarioTable tr[data-id="${id}"]`).remove();
                     })
                     .catch(error => {

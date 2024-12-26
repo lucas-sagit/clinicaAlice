@@ -32,7 +32,6 @@ class ClienteController extends Controller
             'id_sessao' => 'nullable|exists:sessoes,id',
         ]);
 
-
         Cliente::create([
             'nome' => $request->nome,
             'cpf' => $request->cpf,
@@ -75,7 +74,6 @@ class ClienteController extends Controller
             'cliente' => $cliente,
         ]);
     }
-
 
     public function update(Request $request, $id)
     {

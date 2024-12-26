@@ -25,9 +25,10 @@ class funcionarioController extends Controller
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|cpf',
             'telefone' => 'required|string|telefone',
+            'cargo' => 'required|string',
             'dataNascimento' => 'required|date',
             'id_funcionario' => 'nullable|exists:funcionarios,id',
-            'id_administrador' => 'nullable|exists:administradores,id',
+            // 'id_administrador' => 'nullable|exists:administradores,id',
             'id_sessao' => 'nullable|exists:sessoes,id',
         ]);
 
@@ -36,9 +37,10 @@ class funcionarioController extends Controller
             'nome' => $request->nome,
             'cpf' => $request->cpf,
             'telefone' => $request->telefone,
+            'cargo' => $request ->cargo,
             'dataNascimento' => $request->dataNascimento,
             'id_funcionario' => $request->id_funcionario,
-            'id_administrador' => $request->id_administrador,
+            // 'id_administrador' => $request->id_administrador,
             'id_sessao' => $request->id_sessao,
         ]);
 
@@ -59,6 +61,7 @@ class funcionarioController extends Controller
             'nome' => 'required|string|max:255',
             'cpf' => 'required|string|cpf',
             'telefone' => 'required|string',
+            'cargo' => 'required|string|max:100',
             'dataNascimento' => 'required|date_format:Y-m-d',
         ]);
 
@@ -66,6 +69,7 @@ class funcionarioController extends Controller
         $funcionario->nome = $request->nome;
         $funcionario->cpf = $request->cpf;
         $funcionario->telefone = $request->telefone;
+        $funcionario->cargo = $request->cargo;
         $funcionario->dataNascimento = $request->dataNascimento;
         $funcionario->save();
 
@@ -88,8 +92,8 @@ class funcionarioController extends Controller
         $funcionario->nome = $request->input('nome');
         $funcionario->cpf = $request->input('cpf');
         $funcionario->telefone = $request->input('telefone');
-
-        $funcionario->dataNascimento = Carbon::parse($request->input('dataNascimento'))->format('Y-m-d');  // Formatação
+        $funcionario->cargo = $request->input('cargo');
+        $funcionario->dataNascimento = Carbon::parse($request->input('dataNascimento'))->format('Y-m-d');
         $funcionario->save();
 
         return response()->json(['message' => 'funcionario Atualizado com Sucesso!', 'funcionario' => $funcionario]);

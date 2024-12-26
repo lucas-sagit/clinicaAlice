@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('funcionario', function (Blueprint $table) {
             $table->id()->primary();
-            $table->foreignId('id_administrador')->constrained('administrador');
+            // $table->foreignId('id_administrador')->constrained('administrador');
             $table->string('nome');
             $table->string('telefone');
             $table->string('cpf');
             $table->date('dataNascimento');
-            $table->string('senha');
+            $table->string('cargo');
+            // $table->string('senha');
             $table->timestamps();
         });
     }

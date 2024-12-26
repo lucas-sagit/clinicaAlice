@@ -4,6 +4,7 @@ use App\Http\Controllers\funcionarioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\clienteController;
+use App\Http\Controllers\sessaoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,17 +32,16 @@ Route::controller(ClienteController::class)->group(function () {
 
 // funcionario
 Route::controller(funcionarioController::class)->group(function (){
-    Route::get('funcionario', [funcionarioController::class, 'showFuncionarioForm'])->name('components.funcionario');
+    Route::get('funcionario', [funcionarioController::class, 'showFuncionarioForm'])->name('funcionario');
     Route::post('funcionario', [funcionarioController::class, 'store'])->name('funcionario.store');
     Route::put('funcionario/{id}', [funcionarioController::class. 'update'])->name('funcionario.update');
     Route::delete('funcionario/{id}', [funcionarioController::class, 'destroy']);
 });
 
-// Route::get('/funcionario', function () {
-//     return view('components.funcionario');
-// });
+
+Route::controller(sessaoController::class)->group(function () {
+    Route::get('sessao', [sessaoController::class, 'showSessaoForm'])->name('sessao');
+    Route::post('sessao', [sessaoController::class, 'store'])->name('sessao.store');
 
 
-Route::get('/sessao', function () {
-    return view('components.sessao');  // Isso retornará o componente
 });

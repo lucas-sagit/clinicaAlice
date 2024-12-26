@@ -1,4 +1,5 @@
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,10 +36,13 @@
                         <td>{{ $cliente->nome }}</td>
                         <td>{{ $cliente->cpf }}</td>
                         <td>{{ $cliente->telefone }}</td>
-                        <td>{{ $cliente->data_nascimento ? \Carbon\Carbon::parse($cliente->data_nascimento)->format('d/m/Y') : 'Data não informada' }}</td>
+                        <td>{{ $cliente->data_nascimento ? \Carbon\Carbon::parse($cliente->data_nascimento)->format('d/m/Y') : 'Data não informada' }}
+                        </td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="editClient({{ $cliente }})">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteClient({{ $cliente->id }})">Deletar</button>
+                            <button class="btn btn-warning btn-sm"
+                                onclick="editClient({{ $cliente }})">Editar</button>
+                            <button class="btn btn-danger btn-sm"
+                                onclick="deleteClient({{ $cliente->id }})">Deletar</button>
                         </td>
                     </tr>
                 @endforeach
@@ -47,7 +51,8 @@
     </div>
 
     <!-- Modal de Adicionar Cliente -->
-    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -83,7 +88,8 @@
     </div>
 
     <!-- Modal de Editar Cliente -->
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -128,120 +134,133 @@
             input.value = mask.replace(/0/g, () => value[i++] || '');
         }
 
-        document.getElementById('cpf').addEventListener('input', function () {
+        document.getElementById('cpf').addEventListener('input', function() {
             applyMask(this, '000.000.000-00');
         });
 
-        document.getElementById('telef').addEventListener('input', function () {
+        document.getElementById('telef').addEventListener('input', function() {
             applyMask(this, '(00) 00000-0000');
         });
 
-        document.getElementById('editCpf').addEventListener('input', function () {
+        document.getElementById('editCpf').addEventListener('input', function() {
             applyMask(this, '000.000.000-00');
         });
 
-        document.getElementById('editTelef').addEventListener('input', function () {
+        document.getElementById('editTelef').addEventListener('input', function() {
             applyMask(this, '(00) 00000-0000');
         });
 
         // Adicionar Cliente
         document.getElementById('addClienteForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const nome = document.getElementById('nome').value;
-            const cpf = document.getElementById('cpf').value;
-            const telefone = document.getElementById('telef').value;
-            const dataNascimento = document.getElementById('dataNascimento').value;
+                    event.preventDefault();
+                    const nome = document.getElementById('nome').value;
+                    const cpf = document.getElementById('cpf').value;
+                    const telefone = document.getElementById('telef').value;
+                    const dataNascimento = document.getElementById('dataNascimento').value;
 
-            fetch('/cliente', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    nome,
-                    cpf,
-                    telefone,
-                    dataNascimento
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                location.reload();
-                $('#addModal').modal('hide');
-            })
-            .catch(error => {
-                alert('não cadastrou:', error);
-            });
-        });
+                    fetch('/cliente', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            },
+                            body: JSON.stringify({
+                                nome,
+                                cpf,
+                                telefone,
+                                dataNascimento
+                            })
+                        })
+                        .then(response => {
+                            // Verifica se a resposta foi bem-sucedida
+                            if (!response.ok) {
+                                return response.text().then(text => {
+                                    throw new Error(`Erro: ${response.status} - ${text}`);
+                                });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Cliente adicionado:', data);
+                            location.reload();
+                            $('#addModal').modal('hide');
+                        })
+                        .catch(error => {
+                            ('Erro:', error);
+                            alert('Erro ao adicionar cliente.');
+                        });
+                    });
 
-        // Editar Cliente
-        function editClient(client) {
+                    // Editar Cliente
+                    function editClient(client) {
 
-                    document.getElementById('editNome').value = client.nome;
-                    document.getElementById('editCpf').value = client.cpf;
-                    document.getElementById('editTelef').value = client.telefone;
-                    document.getElementById('editDataNascimento').value = client.data_nascimento;
-                    document.getElementById('editClientId').value = client.id;
-                    $('#editModal').modal('show');
+                        document.getElementById('editNome').value = Cliente.nome;
+                        document.getElementById('editCpf').value = Cliente.cpf;
+                        document.getElementById('editTelef').value = Cliente.telefone;
+                        document.getElementById('editDataNascimento').value = Cliente.data_nascimento;
+                        document.getElementById('editClientId').value = Cliente.id;
+                        $('#editModal').modal('show');
 
-        }
-
-        document.getElementById('editClientForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            console.log(event)
-
-            const nome = document.getElementById('editNome').value;
-            const cpf = document.getElementById('editCpf').value;
-            const telefone = document.getElementById('editTelef').value;
-            const dataNascimento = document.getElementById('editDataNascimento').value;
-            const id = document.getElementById('editClientId').value;
-
-            fetch(`/cliente/${id}`,{
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    nome,
-                    cpf,
-                    telefone,
-                    data_nascimento:dataNascimento
-                })
-            })
-
-                .then(response => response.json())
-                .then(data => {
-                    location.reload();
-                })
-                .catch(error => {
-                    alert("Erro ao carregar os dados do cliente");
-                });
-        }
-    )
-
-
-        // Deletar Cliente
-        function deleteClient(id) {
-            if (confirm("Tem certeza que deseja excluir este cliente?")) {
-                fetch(`/cliente/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    document.querySelector(`#clienteTable tr[data-id="${id}"]`).remove();
-                })
-                .catch(error => {
-                    console.log("Erro ao excluir cliente:\n" + error);
-                });
-            }
-        }
+
+                    document.getElementById('editClientForm').addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        console.log(event)
+
+                        const nome = document.getElementById('editNome').value;
+                        const cpf = document.getElementById('editCpf').value;
+                        const telefone = document.getElementById('editTelef').value;
+                        const dataNascimento = document.getElementById('editDataNascimento').value;
+                        const id = document.getElementById('editClientId').value;
+
+                        fetch(`/cliente/${id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    nome,
+                                    cpf,
+                                    telefone,
+                                    dataNascimento
+                                })
+                            })
+
+                            .then(response => response.json())
+                            .then(data => {
+                                location.reload();
+                            })
+                            .catch(error => {
+                                alert("Erro ao carregar os dados do cliente");
+                            });
+                    })
+
+
+                    // Deletar Cliente
+                    function deleteClient(id) {
+                        if (confirm("Tem certeza que deseja excluir este cliente?")) {
+                            fetch(`/cliente/${id}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    alert(data.message);
+                                    document.querySelector(`#clienteTable tr[data-id="${id}"]`).remove();
+                                })
+                                .catch(error => {
+                                    console.log("Erro ao excluir cliente:\n" + error);
+                                });
+                        }
+                    }
     </script>
 </body>
+
 </html>

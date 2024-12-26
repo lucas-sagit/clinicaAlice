@@ -15,13 +15,14 @@ class funcionario extends Model
         'cpf',
         'telefone',
         'dataNacimento',
-        'senha'
+        'cargo'
+        // 'senha'
     ];
 
-    public function administrador(): BelongsTo
-    {
-        return $this->belongsTo(Administrador::class);
-    }
+    // public function administrador(): BelongsTo
+    // {
+    //     return $this->belongsTo(Administrador::class);
+    // }
 
     public function clientes(): HasMany {
 

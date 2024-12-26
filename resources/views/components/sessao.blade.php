@@ -14,39 +14,41 @@
         <h1>Painel de Sessão</h1>
 
         <!-- Botões para ações -->
-        <button class="btn btn-primary" data-toggle="modal" data-target="#addModal">Adicionar sessão</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addModal">Adicionar Sessão</button>
 
-        <!-- Tabela de funcionários -->
+        <!-- Tabela de sessões -->
         <table class="table mt-3">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Nome do paciente</th>
                     <th>CPF</th>
-                    <th>Sessão com</th>
+                    <th>Sessões Pagas</th>
+                    <th>Sessões Faltas</th>
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="clienteTable">
-                <!-- Os dados dos funcionários serão carregados aqui -->
+            <tbody id="sassaoTable">
+                <!-- Dados da sessão serão carregados aqui -->
             </tbody>
         </table>
     </div>
 
-    <!-- Modal de Adicionar Funcionário -->
+    <!-- Modal de Adicionar Sessão -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Adicionar Cliente</h5>
+                    <h5 class="modal-title" id="addModalLabel">Adicionar Sessão</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="addClienteForm">
+                    <form id="addSessaoForm" action="{{ route('sessao.store') }}"  method="POST">
+                        @csrf
                         <div class="form-group">
-                            <label for="nome">Nome</label>
+                            <label for="nome">Nome do Paciente</label>
                             <input type="text" class="form-control" id="nome" required>
                         </div>
                         <div class="form-group">
@@ -54,8 +56,12 @@
                             <input type="text" class="form-control" id="cpf" required>
                         </div>
                         <div class="form-group">
-                            <label for="roles">Com o profissional</label>
-                            <input type="text" class="form-control" id="roles" required>
+                            <label for="sessaoPaga">Sessões Pagas</label>
+                            <input type="number" class="form-control" id="sessaoPaga" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessaoFalta">Sessões Faltas</label>
+                            <input type="number" class="form-controlmodel" id="sessaoFalta" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Salvar</button>
                     </form>
@@ -64,12 +70,12 @@
         </div>
     </div>
 
-    <!-- Modal de Editar cliente (similar ao de Adicionar) -->
+    <!-- Modal de Editar Sessão -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Cliente</h5>
+                    <h5 class="modal-title" id="editModalLabel">Editar Sessão</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -77,7 +83,7 @@
                 <div class="modal-body">
                     <form id="editSessaoForm">
                         <div class="form-group">
-                            <label for="editNome">Nome</label>
+                            <label for="editNome">Nome do Paciente</label>
                             <input type="text" class="form-control" id="editNome" required>
                         </div>
                         <div class="form-group">
@@ -85,8 +91,12 @@
                             <input type="text" class="form-control" id="editCpf" required>
                         </div>
                         <div class="form-group">
-                            <label for="editroles">Data de Nascimento</label>
-                            <input type="date" class="form-control" id="editroles" required>
+                            <label for="editSessaoPaga">Sessões Pagas</label>
+                            <input type="number" class="form-control" id="editSessaoPaga" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSessaoFalta">Sessões Faltas</label>
+                            <input type="number" class="form-control" id="editSessaoFalta" required>
                         </div>
                         <input type="hidden" id="editSessaoId">
                         <button type="submit" class="btn btn-primary">Salvar Alterações</button>
@@ -102,25 +112,35 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
     <script>
-        // Exemplo de dados
-        const clientes = [
-            { id: 1, nome: "João Silva", cpf: "123.456.789-00", roles: "Maria teste", senha: "senha123" },
-            { id: 2, nome: "Maria Oliveira", cpf: "987.654.321-00", roles: "José teste", senha: "senha456" }
-        ];
+        // Exemplo de dados (simulando sessões)
+        function applyMask(input, mask) {
+            let value = input.value.replace(/\D/g, '');
+            let i = 0;
+            input.value = mask.replace(/0/g, () => value[i++] || '');
+        }
+
+        document.getElementById('cpf').addEventListener('input', function() {
+            applyMask(this, '000.000.000-00');
+        });
+
+        document.getElementById('editCpf').addEventListener('input', function() {
+            applyMask(this, '000.000.000-00');
+        });
 
         function renderTable() {
-            const tableBody = document.getElementById('clienteTable');
+            const tableBody = document.getElementById('sassaoTable');
             tableBody.innerHTML = '';
-            clientes.forEach(cliente => {
+            sessao.forEach(sessao => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${cliente.id}</td>
-                    <td>${cliente.nome}</td>
-                    <td>${cliente.cpf}</td>
-                    <td>${cliente.roles}</td>
+                    <td>${sessao.id}</td>
+                    <td>${sessao.nome}</td>
+                    <td>${sessao.cpf}</td>
+                    <td>${sessao.sessaoPaga}</td>
+                    <td>${sessao.sessaoFalta}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editSessao(${cliente.id})">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="deletecliente(${cliente.id})">Deletar</button>
+                        <button class="btn btn-warning btn-sm" onclick="editSessao(${sessao.id})">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteSessao(${sessao.id})">Deletar</button>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -128,38 +148,40 @@
         }
 
         function editSessao(id) {
-            const cliente = clientes.find(f => f.id === id);
-            document.getElementById('editSessaoId').value = cliente.id;
-            document.getElementById('editNome').value = cliente.nome;
-            document.getElementById('editCpf').value = cliente.cpf;
-            document.getElementById('editroles').value = cliente.roles;
+            const sessao = sessoes.find(f => f.id === id);
+            document.getElementById('editSessaoId').value = sessao.id;
+            document.getElementById('editNome').value = sessao.nome;
+            document.getElementById('editCpf').value = sessao.cpf;
+            document.getElementById('editSessaoPaga').value = sessao.sessaoPaga;
+            document.getElementById('editSessaoFalta').value = sessao.sessaoFalta;
 
             $('#editModal').modal('show');
         }
 
-        function deletecliente(id) {
-            const index = clientes.findIndex(f => f.id === id);
+        function deleteSessao(id) {
+            const index = sessoes.findIndex(f => f.id === id);
             if (index > -1) {
-                clientes.splice(index, 1);
+                sessoes.splice(index, 1);
                 renderTable();
             }
         }
 
-        document.getElementById('addClienteForm').addEventListener('submit', function(event) {
+        document.getElementById('addSessaoForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const nome = document.getElementById('nome').value;
             const cpf = document.getElementById('cpf').value;
-            const roles = document.getElementById('roles').value;
+            const sessaoPaga = document.getElementById('sessaoPaga').value;
+            const sessaoFalta = document.getElementById('sessaoFalta').value;
 
-            const newCliente = {
-                id: clientes.length + 1,
+            const new sessao = {
+                id: sessoes.length + 1,
                 nome,
                 cpf,
-                roles,
-
+                sessaoPaga,
+                sessaoFalta,
             };
 
-            clientes.push(newCliente);
+            sessoes.push(new sessao);
             renderTable();
             $('#addModal').modal('hide');
         });
@@ -169,14 +191,14 @@
             const id = document.getElementById('editSessaoId').value;
             const nome = document.getElementById('editNome').value;
             const cpf = document.getElementById('editCpf').value;
-            const roles = document.getElementById('editroles').value;
+            const sessaoPaga = document.getElementById('editSessaoPaga').value;
+            const sessaoFalta = document.getElementById('editSessaoFalta').value;
 
-
-            const cliente = clientes.find(f => f.id === parseInt(id));
-            cliente.nome = nome;
-            cliente.cpf = cpf;
-            cliente.roles = roles;
-
+            const sessao = sessoes.find(f => f.id === parseInt(id));
+            sessao.nome = nome;
+            sessao.cpf = cpf;
+            sessao.sessaoPaga = sessaoPaga;
+            sessao.sessaoFalta = sessaoFalta;
 
             renderTable();
             $('#editModal').modal('hide');
